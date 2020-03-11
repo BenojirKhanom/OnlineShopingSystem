@@ -1,0 +1,225 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="MVC_projectModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Category">
+    <Key>
+      <PropertyRef Name="CategoryId" />
+    </Key>
+    <Property Name="CategoryId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CategoryName" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="CustomerId" />
+    </Key>
+    <Property Name="CustomerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CustomerName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Address" Type="varchar(max)" />
+    <Property Name="Number" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="CustomerReview">
+    <Key>
+      <PropertyRef Name="ReviewId" />
+    </Key>
+    <Property Name="ReviewId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CustomerId" Type="int" />
+    <Property Name="Opinion" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="ImageFile" Type="varchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="DeliveryBoy">
+    <Key>
+      <PropertyRef Name="DeliveryBoyId" />
+    </Key>
+    <Property Name="DeliveryBoyId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DeliveryBoyName" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="EmpID" />
+    </Key>
+    <Property Name="EmpID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" />
+    <Property Name="Age" Type="int" />
+    <Property Name="Country" Type="nvarchar" MaxLength="30" />
+    <Property Name="Salary" Type="decimal" Precision="18" Scale="0" />
+  </EntityType>
+  <EntityType Name="OrderDtls">
+    <Key>
+      <PropertyRef Name="OrderDtlsId" />
+    </Key>
+    <Property Name="OrderDtlsId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OrderId" Type="int" />
+    <Property Name="ProductId" Type="int" />
+    <Property Name="EmpID" Type="int" />
+    <Property Name="Quentity" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="TotalCost" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Orders">
+    <Key>
+      <PropertyRef Name="OrderId" />
+    </Key>
+    <Property Name="OrderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Orderdate" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="CustomerId" Type="int" />
+    <Property Name="ShippingId" Type="int" />
+  </EntityType>
+  <EntityType Name="Product">
+    <Key>
+      <PropertyRef Name="ProductId" />
+    </Key>
+    <Property Name="ProductId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ProductName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="CategoryId" Type="int" />
+    <Property Name="price" Type="varchar(max)" />
+    <Property Name="ImageFile" Type="varchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="ShippingInfo">
+    <Key>
+      <PropertyRef Name="ShippingId" />
+    </Key>
+    <Property Name="ShippingId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DeliveryBoyId" Type="int" />
+    <Property Name="ShippingCost" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="ShippingDate" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <Association Name="FK__CustomerR__Custo__72C60C4A">
+    <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
+    <End Role="CustomerReview" Type="Self.CustomerReview" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="CustomerId" />
+      </Principal>
+      <Dependent Role="CustomerReview">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__OrderDtls__EmpID__6FE99F9F">
+    <End Role="Employee" Type="Self.Employee" Multiplicity="0..1" />
+    <End Role="OrderDtls" Type="Self.OrderDtls" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="EmpID" />
+      </Principal>
+      <Dependent Role="OrderDtls">
+        <PropertyRef Name="EmpID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__OrderDtls__Order__6E01572D">
+    <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
+    <End Role="OrderDtls" Type="Self.OrderDtls" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Orders">
+        <PropertyRef Name="OrderId" />
+      </Principal>
+      <Dependent Role="OrderDtls">
+        <PropertyRef Name="OrderId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__OrderDtls__Produ__6EF57B66">
+    <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+    <End Role="OrderDtls" Type="Self.OrderDtls" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="ProductId" />
+      </Principal>
+      <Dependent Role="OrderDtls">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Orders__Customer__68487DD7">
+    <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
+    <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="CustomerId" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Orders__Shipping__693CA210">
+    <End Role="ShippingInfo" Type="Self.ShippingInfo" Multiplicity="0..1" />
+    <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ShippingInfo">
+        <PropertyRef Name="ShippingId" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="ShippingId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Product__Categor__5EBF139D">
+    <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
+    <End Role="Product" Type="Self.Product" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Category">
+        <PropertyRef Name="CategoryId" />
+      </Principal>
+      <Dependent Role="Product">
+        <PropertyRef Name="CategoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ShippingI__Deliv__656C112C">
+    <End Role="DeliveryBoy" Type="Self.DeliveryBoy" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="ShippingInfo" Type="Self.ShippingInfo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DeliveryBoy">
+        <PropertyRef Name="DeliveryBoyId" />
+      </Principal>
+      <Dependent Role="ShippingInfo">
+        <PropertyRef Name="DeliveryBoyId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="MVC_projectModelStoreContainer">
+    <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CustomerReview" EntityType="Self.CustomerReview" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="DeliveryBoy" EntityType="Self.DeliveryBoy" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="OrderDtls" EntityType="Self.OrderDtls" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ShippingInfo" EntityType="Self.ShippingInfo" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK__CustomerR__Custo__72C60C4A" Association="Self.FK__CustomerR__Custo__72C60C4A">
+      <End Role="Customer" EntitySet="Customer" />
+      <End Role="CustomerReview" EntitySet="CustomerReview" />
+    </AssociationSet>
+    <AssociationSet Name="FK__OrderDtls__EmpID__6FE99F9F" Association="Self.FK__OrderDtls__EmpID__6FE99F9F">
+      <End Role="Employee" EntitySet="Employee" />
+      <End Role="OrderDtls" EntitySet="OrderDtls" />
+    </AssociationSet>
+    <AssociationSet Name="FK__OrderDtls__Order__6E01572D" Association="Self.FK__OrderDtls__Order__6E01572D">
+      <End Role="Orders" EntitySet="Orders" />
+      <End Role="OrderDtls" EntitySet="OrderDtls" />
+    </AssociationSet>
+    <AssociationSet Name="FK__OrderDtls__Produ__6EF57B66" Association="Self.FK__OrderDtls__Produ__6EF57B66">
+      <End Role="Product" EntitySet="Product" />
+      <End Role="OrderDtls" EntitySet="OrderDtls" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Orders__Customer__68487DD7" Association="Self.FK__Orders__Customer__68487DD7">
+      <End Role="Customer" EntitySet="Customer" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Orders__Shipping__693CA210" Association="Self.FK__Orders__Shipping__693CA210">
+      <End Role="ShippingInfo" EntitySet="ShippingInfo" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Product__Categor__5EBF139D" Association="Self.FK__Product__Categor__5EBF139D">
+      <End Role="Category" EntitySet="Category" />
+      <End Role="Product" EntitySet="Product" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ShippingI__Deliv__656C112C" Association="Self.FK__ShippingI__Deliv__656C112C">
+      <End Role="DeliveryBoy" EntitySet="DeliveryBoy" />
+      <End Role="ShippingInfo" EntitySet="ShippingInfo" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

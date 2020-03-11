@@ -1,0 +1,249 @@
+﻿
+@{
+    ViewBag.Title = "DataInsert";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>DataInsert</h2>
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Multy Row Insert</title>
+</head>
+<body>
+    <div>
+        <label>Create Sample User JSON Data and send it to controller</label><br /><br />
+
+        ProductId : @Html.DropDownList("ProductId", (SelectList)ViewBag.ProductId)
+
+        OrderId :  @Html.DropDownList("OrderId", (SelectList)ViewBag.OrderId)
+
+
+        EmpID :   @Html.DropDownList("EmpID", (SelectList)ViewBag.EmpID)
+
+        TotalCost : <input type="text" id="TotalCost" /><br /> <br />
+
+        Quentity : <input type="text" id="Quentity" /><br /> <br />
+
+        <input type="button" id="btnUpdateUserDetail" value="Add" onclick="AddValueToList();" /> 
+        @*<input type="button" id="btnUpdateUserDetailEdit" value="Edit" onclick="EditValueToList();" />*@
+
+        <br />
+        <table id="infoTable">
+            <thead style="border:1px;">
+                <tr>
+                    <th>OrderDtlsId</th>
+                    <th> Product Name</th>
+                    <th> OrderId</th>
+
+                    <th>EmpID </th>
+                    <th>TotalCost </th>
+                    <th>Quentity </th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+        <input type="button" id="btnUpdateInstituteDetail" value="Submit to Server" onclick="UpdateInstituteDetail();" />
+
+
+    </div>
+</body>
+</html>
+
+<div id="showEmpName">
+
+</div>
+
+<div id="showProductName">
+
+</div>
+
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+
+<script lang="en" type="text/javascript">
+    var OrderDtlsId = 0;
+    var OrderList = [];
+    var OrderDetails = {};
+    function AddValueToList() {
+        OrderDetails = {};
+        OrderDtlsId = 0;
+
+        OrderDetails["OrderDtlsId"] = OrderList.length + 1;
+
+        OrderDetails["ProductId"] = document.getElementById("ProductId").value;
+        OrderDetails["OrderId"] = document.getElementById("OrderId").value;
+
+        OrderDetails["EmpID"] = document.getElementById("EmpID").value;
+
+        console.log("Product Id " + document.getElementById("ProductId").value);
+
+        OrderDetails["ProductName"] = getProduct(document.getElementById("ProductId").value);
+
+
+        OrderDetails["EmpName"] = getEmployee(document.getElementById("EmpID").value);
+
+        console.log("EmpID " + document.getElementById("EmpID").value);
+        OrderDetails["Quentity"] = document.getElementById("Quentity").value;
+        OrderDetails["TotalCost"] = document.getElementById("TotalCost").value;
+
+        OrderList.push(OrderDetails);
+
+        console.log(OrderList);
+        fillTable();
+
+
+    }
+
+    function EditValueToList() {
+
+        for (var i = OrderList.length; i--;) {
+            if (OrderList[i].OrderDtlsId === OrderDtlsId) {
+                OrderList[i].Order.OrderId = document.getElementById("ProductId").value;
+                OrderList[i].Product.ProductId = document.getElementById("OrderId").value;
+                OrderList[i].Employee.Name = document.getElementById("EmpID").value;
+                OrderList[i].Quentity = document.getElementById("Quentity").value;
+                OrderList[i].TotalCost = document.getElementById("TotalCost").value;
+
+                break;
+            }
+        }
+
+        fillTable();
+
+    }
+
+    var ajaxProductResult = '';
+    function getProduct(ProductId) {
+        $.ajax({
+            url: "/OrderDtls/getProductList",
+            async: false,
+            dataType: "json",
+            data: { ProductId: ProductId },
+            success: function (data) {
+                ajaxProductResult = data.ProductName;
+
+            }
+        });
+
+        return ajaxProductResult;
+
+    }
+
+    var ajaxEmployeeResult = '';
+    function getEmployee(EmployeeId) {
+        $.ajax({
+            url: "/OrderDtls/getEmployeeList",
+            async: false,
+            dataType: "json",
+            data: { EmployeeId: EmployeeId },
+            success: function (data) {
+                ajaxEmployeeResult = data.EmployeeName;
+            }
+        });
+
+        return ajaxEmployeeResult;
+    }
+
+
+
+    function fillTable() {
+
+
+
+        $('#infoTable > tbody').empty();
+
+        OrderList.forEach(function (val) {
+
+            $('#infoTable > tbody:last-child').append('<tr><td>' + val.OrderDtlsId + '</td><td>' + val.ProductName + '</td><td>' + val.OrderId + '</td><td>' + val.EmpName + '</td><td><td>' + val.Quentity + '</td><td>' + val.TotalCost + '</td> <input type="button"  value="Delete" onclick="tempDelete(' + val.OrderDtlsId + ')" /> <input type="button"  value="Edit" onclick="editPre(' + val.OrderDtlsId + ')" /></td></tr>');
+        })
+
+    }
+
+
+    function tempDelete(OrderDtlsId) {
+        remove(OrderList, OrderDtlsId);
+        fillTable();
+    }
+
+    function editPre(OrderDtlsId) {
+        for (var i = OrderList.length; i--;) {
+            if (OrderList[i].OrderDtlsId === OrderDtlsId) {
+                OrderDtlsId = OrderDtlsId;
+                document.getElementById("ProductId").value = OrderList[i].ProductId;
+                document.getElementById("OrderId").value = OrderList[i].OrderId;
+                document.getElementById("EmpID").value = OrderList[i].EmpID;
+                document.getElementById("Quentity").value = OrderList[i].Quentity;
+                document.getElementById("TotalCost").value = OrderList[i].TotalCost;
+
+                break;
+            }
+        }
+
+
+    }
+
+    function remove(arr, item) {
+        for (var i = arr.length; i--;) {
+            if (arr[i].OrderDtlsId === item) {
+                arr.splice(i, 1);
+            }
+        }
+        for (var i = 0; i < arr.length; i++) {
+            arr[i].OrderDtlsId = i + 1;
+        }
+
+    }
+
+
+    function UpdateInstituteDetail() {
+
+
+        var OrderJason = JSON.stringify(OrderList);
+
+        var getReportColumnsParams = { "OrderJason": OrderJason };
+
+        $.ajax({
+            type: "POST",
+            traditional: true,
+            async: false,
+            cache: false,
+            url: '/OrderDtls/DataInsert',
+            context: document.body,
+            data: getReportColumnsParams,
+            success: function (result) {
+                alert(result);
+            },
+            error: function (xhr) {
+                console.log(xhr.responseText);
+                alert("Error has occurred..");
+            }
+        });
+
+        InstituteList = [];
+        document.getElementById("ProductId").value = '';
+        document.getElementById("OrderId").value = '';
+        document.getElementById("EmpID").value = '';
+        document.getElementById("Quentity").value = '';
+        document.getElementById("TotalCost").value = '';
+
+        fillTable();
+
+
+
+
+    }
+
+
+
+
+</script>
+
+

@@ -1,0 +1,65 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+
+
+    <ul class="nav navbar-nav navbar-right">
+
+        @if (User.IsInRole("Admin"))
+        {
+
+
+
+            <div class="btn-group" style="background-color:#d3feff">
+                <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Admin<span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    <li>@Html.ActionLink("Roll", "RollCreate", "Admin_Roll")</li>
+                    <li class="divider"></li>
+
+                    <li>@Html.ActionLink("Categories", "Index", "Categories")</li>
+                    <li>@Html.ActionLink("Employees", "Index", "Employees")</li>
+                    <li>@Html.ActionLink("Products", "Index", "Products")</li>
+                    <li>@Html.ActionLink("Customers info in details", "Index", "Customers")</li>
+                    <li>@Html.ActionLink("DeliveryBoys", "Index", "DeliveryBoys")</li>
+                    <li>@Html.ActionLink("OrderDtls", "Index", "OrderDtls")</li>
+                    <li>@Html.ActionLink("Orders", "Index", "Orders")</li>
+                    <li>@Html.ActionLink("Products", "Index", "Products")</li>
+                    <li>@Html.ActionLink("ShippingInfoes", "Index", "ShippingInfoes")</li>
+                    <li class="divider"></li>
+                    <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                    <li>@Html.ActionLink("Roll", "RollCreate", "Admin_Roll")</li>
+                    <li>@Html.ActionLink("Employees", "Index", "Employees")</li>
+                    <li>@Html.ActionLink("Customers details", "IndexSingle", "Customers")</li>
+                    <li>@Html.ActionLink("OrderDtls", "DataInsert", "OrderDtls")</li>
+
+                </ul>
+
+            </div>
+
+            <li>@Html.ActionLink("Roll", "RollCreate", "Admin_Roll")</li>
+            <li>@Html.ActionLink("Employees", "Index", "Employees")</li>
+            <li>@Html.ActionLink("Customers details", "IndexSingle", "Customers")</li>
+            <li>@Html.ActionLink("OrderDtls", "DataInsert", "OrderDtls")</li>
+            
+            
+
+
+        }
+        <li>
+            @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+        </li>
+        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+    </ul>
+        
+    }
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
+}
